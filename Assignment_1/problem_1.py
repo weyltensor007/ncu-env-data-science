@@ -12,7 +12,7 @@ fig, axes = plt.subplots(2, 2, figsize=(8, 8), constrained_layout=True)
 
 # set xlim, ylim for different plots
 linear_lim = (0, 10)
-log_lim = (10e-3, 10e2)
+log_lim = (1e-3, 1e2)
 
 # set colors for different functions
 color_x = "tab:orange"
@@ -35,7 +35,7 @@ ax.plot(x_linspace, np.log10(x_linspace), color=color_log)
 ax.set_xlim(*linear_lim)
 ax.set_ylim(*linear_lim)
 # set y major ticks (no x ticks for this ax)
-ax.set_yticks([0, 2, 4, 6, 8, 10])
+ax.set_yticks(ticks_linear)
 # set x,y minor ticks every 0.4(need minor ticks for grid lines)
 ax.xaxis.set_minor_locator(MultipleLocator(0.4))
 ax.yaxis.set_minor_locator(MultipleLocator(0.4))
@@ -98,7 +98,6 @@ ax.set_ylim(*linear_lim)
 
 # set x-axis ticks at 10^-3, 10^-2, ..., 10^2
 ax.set_xticks(ticks_logarithmic)
-ax.set_xlim(ticks_logarithmic[0], ticks_logarithmic[-1])
 # hide x ticks
 ax.tick_params(axis='x',
                which='both',
@@ -123,4 +122,44 @@ ax.grid(True, which='minor', linestyle='-', alpha=0.5)
 # set title
 ax.set_title("X logarithmic - Y linear", fontsize=16)
 
-plt.show()
+'''
+lower left x:linear, y:log
+'''
+ax = axes[1, 0]
+ax.set_yscale("log")
+ax.set_xlim(*linear_lim)
+ax.set_ylim(*log_lim)
+ax.plot(x_linspace, x_linspace, color=color_x)
+ax.plot(x_linspace, 10**x_linspace, color=color_exp)
+ax.plot(x_linspace, np.log10(x_linspace), color=color_log)
+ax.xaxis.set_minor_locator(MultipleLocator(0.4))
+ax.grid(True, which='major', linestyle='-', linewidth=0.8)
+ax.grid(True, which='minor', linestyle='-', alpha=0.5)
+ax.set_title("X linear - Y logarithmic", fontsize=16)
+ax.set_ylabel("Logarithmic", fontsize=16)
+ax.set_xlabel("Linear", fontsize=16)
+'''
+lower right x:log, y:log
+'''
+ax = axes[1, 1]
+ax.set_xscale("log")
+ax.set_yscale("log")
+ax.set_xlim(*log_lim)
+ax.set_ylim(*log_lim)
+ax.plot(x_logspace, x_logspace, color=color_x)
+ax.plot(x_logspace, 10**x_logspace, color=color_exp)
+ax.plot(x_logspace, np.log10(x_logspace), color=color_log)
+ax.grid(True, which='major', linestyle='-', linewidth=0.8)
+ax.grid(True, which='minor', linestyle='-', alpha=0.5)
+ax.set_title("X logarithmic - Y logarithmic", fontsize=16)
+ax.set_xlabel("Logarithmic", fontsize=16)
+
+ax.tick_params(
+    axis='y',       # apply to y-axis
+    which='both',   # major and minor ticks
+    left=False,     # hide left ticks
+    right=False,    # hide right ticks
+    labelleft=False  # hide numbers on y-axis
+)
+# plt.show()
+plt.savefig("Assignment_1_problem1.png", dpi=600)
