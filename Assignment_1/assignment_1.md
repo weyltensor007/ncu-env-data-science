@@ -92,6 +92,16 @@ $$
 
 since $\hat{y'}=\hat{y}$, the RMSE stays the same under transformation $T$.
 
+
+By the way, when use a single component(say $\sin$ or $\cos$) will not guarantee that RMSE being invariant under shifting of angles, since it may introduce another component, roughly speaking:
+
+$$
+\sin(\theta+k)=\sin(\theta)\cos(k)+\sin(k)\cos(\theta)
+$$
+
+another independent variable $\cos(\theta)$ appears, this explains the fact that in case iii and iv the RMSE is not invariant.
+
+
 [Problem 2 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_2.py)
 
 
