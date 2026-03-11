@@ -1,8 +1,6 @@
 # Assignment_1
 
-
 **Student Name:** 郭忠侑
-
 
 ## 1. Reproduce the figure for Q3 in the Pre-course Quiz.
 
@@ -25,17 +23,14 @@ Table of RMSE for different cases:
 | iii  | 28.194 | 23.636 |
 | iv   | 20.587 | 23.458 |
 
-
 ### Caveat
 
 When dealing with the case of $\theta'=\theta+60$, we need to do one more operation, that is the modular operation which makes the transformed angles lie in the correct range: $[0,360)$. More specifically, we let $\theta'=(\theta+60) \mod 360$.
 
 ### Discussion of the results
 
-
 - although case a-i is not bad within case a, but using the parameter $\theta$ directly is unstable when adding a constant to it, we can see this effect in case b-i, which is the worst within case b.
 - the RMSE values of case a-ii and b-ii are equivalent, this is not a coincidence, in fact, it is related to the fact that when one perform an invertible linear transformation on the predictor variables, the RMSE is invariant under such transformation. we can prove this fact in the following section.
-
 
 ### RMSE is invariant under an invertible linear transformation on the predictor variables
 
@@ -92,6 +87,7 @@ $$
 
 since $\hat{y'}=\hat{y}$, the RMSE stays the same under transformation $T$.
 
+Note that the usually used standardization of predictors, say $z=(x-\bar{x})/s$ is also a linear transformation and thus it won't affect the RMSE either.
 
 By the way, when use a single component(say $\sin$ or $\cos$) will not guarantee that RMSE being invariant under shifting of angles, since it may introduce another component, roughly speaking:
 
@@ -101,16 +97,31 @@ $$
 
 another independent variable $\cos(\theta)$ appears, this explains the fact that in case iii and iv the RMSE is not invariant.
 
-
 [Problem 2 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_2.py)
-
 
 ## 3. Exercise 5.8 in Hsieh’s book
 
 ![Problem3](imgs/5.8.png)
 
 
-## 4. Exercise 5.9 in Hsieh’s book
+This exercise is related to the so called "Backward Elimination", and result is summarized by the table below:
 
+| round | Nino34 | PNA  | NAO  | AO   | RMSE_train | RMSE_validation |
+| ----- | ------ | ---- | ---- | ---- | ---------- | --------------- |
+| 1     | 0.25   | 0.02 | 0.24 | 0.29 | 424.74     | 544.18          |
+| 2     | 0.25   | 0.01 | 0.57 |      | 430.9      | 552.96          |
+| 3     | 0.26   | 0.01 |      |      | 432.62     | 541.9           |
+| 4     |        | 0    |      |      | 439.22     | 578.3           |
+
+### Discussions
+
+1. By assessing the model with lowest RMSE_validation, the best model would be round 3 which contains Nino34, PNA as predictors.
+2. No, if I was asked to choose two predictors based on the p-values on round 1 model, I may choose PNA and NAO with lower p-values as predictors, which is not necessary the best one according to the criteria above.
+
+[Problem 3 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_3.py)
+
+
+
+## 4. Exercise 5.9 in Hsieh’s book
 
 ![Problem4](imgs/5.9.png)
