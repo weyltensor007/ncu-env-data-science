@@ -125,3 +125,26 @@ This exercise is related to the so called "Backward Elimination", and result is 
 ## 4. Exercise 5.9 in Hsieh’s book
 
 ![Problem4](imgs/5.9.png)
+
+The result of my simulation is summarized by the table below, note that $\lambda=0$ corresponds to MLR.
+Also, I have fixed the random seed in my code as `np.random.seed(666)` in order to keep the reproducibility.
+
+| statistics \\ $\lambda$ |     0.0 |  1e-05 |  0.01 |
+| :---------------------- | ------: | -----: | ----: |
+| a0_hat_std              |   0.022 |  0.015 |     0 |
+| a1_hat_std              |   0.026 |  0.016 |     0 |
+| a2_hat_std              | 138.125 | 90.109 | 0.265 |
+| a3_hat_std              | 138.126 | 90.111 | 0.265 |
+| RMSE_train_mean         |   0.812 |  0.813 | 0.822 |
+| RMSE_train_std          |   0.013 |   0.01 |     0 |
+| RMSE_validation_mean    |   1.035 |  1.037 |  1.03 |
+| RMSE_validation_std     |   0.028 |  0.025 |     0 |
+
+### Discussions
+
+1. It's easy to see that for highly colinear pairs($\hat{a_2}$, $\hat{a_3}$), the variances of these estimators are pretty high and nearly equal. This phenomenon can be explain by eigen-decomposition of a symmetric matrix($X^TX$), since $x_2$, $x_3$ are nearly parallel, there exist an nearly zero eigenvalue and the corresponding eigenvector $[0,0,1,-1]^T$ such that $\text{Var}\hat{\beta}\sim(X^TX)^{-1}=\sum_{i} (1/\lambda_i)v_i v_i^T$ would produces large value at $\beta_2$ and $\beta_3$
+2. Once we've raised the regularization parameter, the variance of those colinear pairs are largely suppressed, showing the effect of regularization on the problem of co-linearity.
+3. The effect of $\lambda=10^{-5}$ is clearly not enough, since almost all statistics are nearly equal, so it's reasonable to use higher $\lambda$ for highly colinear predictors. Regularization suppresses variance because it inflates the small eigenvalues of $X^{T}X$, preventing the inverse matrix from exploding in directions caused by collinearity.
+4. Although regularization reduced the variance of the coefficient estimates, the mean RMSE for both the training and validation sets remained largely unchanged. 
+
+[Problem 4 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_4.py)
