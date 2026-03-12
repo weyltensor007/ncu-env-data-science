@@ -10,6 +10,8 @@ This is my resulting image:
 
 [Problem 1 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_1.py)
 
+<div class="page"></div>
+
 ## 2. Exercise 5.7 in Hsieh’s book
 
 ![Problem2](imgs/5.7.png)
@@ -99,6 +101,8 @@ another independent variable $\cos(\theta)$ appears, this explains the fact that
 
 [Problem 2 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_2.py)
 
+<div class="page"></div>
+
 ## 3. Exercise 5.8 in Hsieh’s book
 
 ![Problem3](imgs/5.8.png)
@@ -121,6 +125,7 @@ This exercise is related to the so called "Backward Elimination", and result is 
 [Problem 3 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_3.py)
 
 
+<div class="page"></div>
 
 ## 4. Exercise 5.9 in Hsieh’s book
 
@@ -143,8 +148,8 @@ Also, I have fixed the random seed in my code as `np.random.seed(666)` in order 
 ### Discussions
 
 1. It's easy to see that for highly colinear pairs($\hat{a_2}$, $\hat{a_3}$), the variances of these estimators are pretty high and nearly equal. This phenomenon can be explain by eigen-decomposition of a symmetric matrix($X^TX$), since $x_2$, $x_3$ are nearly parallel, there exist an nearly zero eigenvalue and the corresponding eigenvector $[0,0,1,-1]^T$ such that $\text{Var}\hat{\beta}\sim(X^TX)^{-1}=\sum_{i} (1/\lambda_i)v_i v_i^T$ would produces large value at $\beta_2$ and $\beta_3$
-2. Once we've raised the regularization parameter, the variance of those colinear pairs are largely suppressed, showing the effect of regularization on the problem of co-linearity.
+2. Once we've raised the regularization parameter, the variance of those colinear pairs are largely suppressed, showing the effect of regularization on the problem of collinearity.
 3. The effect of $\lambda=10^{-5}$ is clearly not enough, since almost all statistics are nearly equal, so it's reasonable to use higher $\lambda$ for highly colinear predictors. Regularization suppresses variance because it inflates the small eigenvalues of $X^{T}X$, preventing the inverse matrix from exploding in directions caused by collinearity.
-4. Although regularization reduced the variance of the coefficient estimates, the mean RMSE for both the training and validation sets remained largely unchanged. 
+4. Although regularization reduced the variance of the coefficient estimates, the mean RMSE for both the training and validation sets remained largely unchanged.
 
 [Problem 4 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_1/problem_4.py)
