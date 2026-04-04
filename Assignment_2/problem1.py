@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-
 # load data
 df = pd.read_csv("data/SWE_tele.csv")
 
@@ -87,7 +86,7 @@ def tune_n_hidden_cv(X, Y, hidden_list, n_folds=5, n_repeats=5):
 
             rmses_all.append(np.mean(rmses))
 
-        results[n_hidden] = np.mean(rmses_all)
+        results[n_hidden] = round(np.mean(rmses_all),3)
 
     best_n_hidden = min(results, key=results.get)
 
@@ -134,25 +133,42 @@ def ELM_ensembles(X_train, Y_train, X_test, Y_test, n_hidden_neurons, n_ensemble
     # Pearson correlation
     corr = np.corrcoef(Y_test.flatten(), Y_pred_mean.flatten())[0, 1]
 
-    return Y_pred_mean, rmse, corr
+    return round(rmse,3), round(corr,3)
+
+'''
+MLR model(outputting rmse, corr)
+'''
+def MLR_model(X_train, Y_train, X_test, Y_test):
+    # add intercept
+    X_train = X_train.values
+    Y_train = Y_train.values.ravel()
+    X_test = X_test.values
+    Y_test=Y_test.values.ravel()
+    # fit beta_hat
+    X = np.column_stack((np.ones(len(X_train)), X_train))
+    beta_hat = np.linalg.solve(X.T @ X, X.T @ Y_train)
+    # predict and calculate rmse & corr
+    Y_pred = np.column_stack((np.ones(len(X_test)), X_test)) @ beta_hat
+    error = Y_test - Y_pred
+    rmse = np.sqrt(np.sum(error**2)/len(error))
+    corr = np.corrcoef(Y_test, Y_pred)[0,1]
+    return round(rmse,3), round(corr,3)
 
 
 # MAIN
-
 # 1. tuning
 hidden_list = [5, 10, 20, 50, 100]
 best_h, cv_results = tune_n_hidden_cv(X_train, Y_train, hidden_list)
-
 print("CV rmse results:", cv_results)
 print("Best n_hidden:", best_h)
 
-# 2. final model (ensemble)
-Y_pred, rmse, corr = ELM_ensembles(
+# 2. final model (ensemble vs. MLR)
+rmse_ELM_ensembles, corr_ELM_ensembles = ELM_ensembles(
     X_train, Y_train,
     X_test, Y_test,
     n_hidden_neurons=best_h,
     n_ensembles=100 # set a fixed ensemble numbers
 )
-
-print("Test RMSE:", rmse)
-print("Test Correlation:", corr)
+rmse_MLR, corr_MLR = MLR_model(X_train, Y_train, X_test, Y_test)
+print(f"rmse_ELM_ensembles={rmse_ELM_ensembles}, rmse_MLR={rmse_MLR}")
+print(f"corr_ELM_ensembles={corr_ELM_ensembles}, corr_MLR={corr_MLR}")
