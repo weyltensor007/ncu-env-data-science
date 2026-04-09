@@ -44,4 +44,4 @@ evaluation_results_df['n_ensemble'] = evaluation_results_df['n_ensemble'].astype
 
 full_info_df = pd.merge(evaluation_results_df,best_lr_results_df,on=["sigma","n_hidden","n_ensemble"])
 full_info_df.to_csv("problem2_full_info.csv", index=False)
-print(full_info_df.to_markdown(index=False))
+print(full_info_df.to_markdown())
