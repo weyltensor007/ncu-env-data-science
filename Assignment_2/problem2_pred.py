@@ -4,17 +4,17 @@ import os
 from tensorflow.keras import layers, models, callbacks, optimizers
 from tensorflow import random
 
-np.random.seed(666)
-random.set_seed(666)
+random.set_seed(666) # set tf random seed to ensure reproducibility
+
 # Load data
 train_csvs = sorted([_.path for _ in os.scandir("data") if "train" in _.name])
 test_csvs = sorted([_.path for _ in os.scandir("data") if "test" in _.name])
 train_dfs = [pd.read_csv(_).rename(columns={'# x':"x", ' y':"y"}) for _ in train_csvs]
 test_dfs = [pd.read_csv(_).rename(columns={'# x':"x", ' y':"y"}) for _ in test_csvs]
 
-# Build one hidden layer model
+# Build one hidden layer model with variable n_hidden_neurons and learning rate(lr)
 def build_model(n_hidden_neurons, lr):
-    # lr = learning rate
+
     model = models.Sequential([
         layers.Dense(n_hidden_neurons, activation='tanh', input_shape=(1,)),
         layers.Dense(1)
@@ -27,25 +27,25 @@ def build_model(n_hidden_neurons, lr):
     
     return model
 
-# Tune lr
 
+
+# assign some fixed quantities(hyperparameters) for training
+min_lr=1e-6
+max_lr=1e-1
+lr_steps=30
+epochs = 2000
+batch_size = 32
+validation_split = 0.15
+patience = 10 # Number of epochs with no improvement after which training will be stopped
+
+# start tuning lr
 def tune_lr(x_train, y_train, n_hidden_neurons):
-    # assign some fixed quantities
-    min_lr=1e-6
-    max_lr=1e-1
-    lr_steps=30
-    epochs = 10
-    batch_size = 50
-    validation_split = 0.15
-    patience = 5 # Number of epochs with no improvement after which training will be stopped.
-    # start tuning
     lr_candidates = np.logspace(np.log10(min_lr), np.log10(max_lr), lr_steps)
     best_lr = None
     best_loss = np.inf
     
     for lr in lr_candidates:
         model = build_model(n_hidden_neurons, lr)
-        
         history = model.fit(
             x_train, y_train,
             epochs=epochs,
@@ -57,7 +57,7 @@ def tune_lr(x_train, y_train, n_hidden_neurons):
                     patience=patience, restore_best_weights=True)
             ]
         )
-        # chose min loss within all epochs(we all know that epochs /, val loss \)
+        # chose min loss within all epochs
         val_loss = min(history.history['val_loss'])
         
         if val_loss < best_loss:
@@ -69,15 +69,9 @@ def tune_lr(x_train, y_train, n_hidden_neurons):
 
 # Ensembles
 def ensemble_predictor(x_train, y_train, x_test, n_hidden_neurons, ensemble_size):
-    # assign some fixed quantities
-    epochs = 10
-    batch_size = 50
-    validation_split = 0.15
-    patience = 5
     # tune LR for every different input
     best_lr = tune_lr(x_train, y_train, n_hidden_neurons)
-    
-    y_preds = [] # collect every ensemble predictions
+    y_preds = [] # collect every ensemble prediction
     
     for _ in range(ensemble_size):
         model = build_model(n_hidden_neurons, best_lr)
@@ -88,10 +82,6 @@ def ensemble_predictor(x_train, y_train, x_test, n_hidden_neurons, ensemble_size
             batch_size=batch_size,
             validation_split=validation_split,
             verbose=0,
-            callbacks=[
-                callbacks.EarlyStopping(
-                    patience=patience, restore_best_weights=True)
-            ]
         )
         
         y_pred = model.predict(x_test, verbose=0) # shape = (#(x_test), 1)
