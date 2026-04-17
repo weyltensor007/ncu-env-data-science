@@ -33,82 +33,86 @@ It's easy to observe that rmse is lower and corr is higher for ELM, indicating i
 
 I used `Keras` to build and train NN models, in particular, using the `callbacks.EarlyStopping` utility helped the tuning of the learning rate. Also, the training of NN models take time, so I split the workflow into 2 steps, namely train/pred and evaluation by saving the predicting values as `npy` file. Finally here is my full resulting table:
 
+note:
+
+- avg_rmse: in an ensemble, for each y_pred, calculate rmse, and then calculate avg(rmse)
+- ensemble_emse: in an ensemble, calculate avg(y_pred), and then calculate its rmse
 
 |      | sigma          | n_hidden | n_ensemble | avg_rmse | ensemble_rmse |     best_lr |
 | ---: | :------------- | -------: | ---------: | -------: | ------------: | ----------: |
-|    0 | noise-0.5sigma |        2 |        100 |  28.7708 |       25.1531 | 1.61026e-05 |
-|    1 | noise-0.5sigma |        2 |         25 |  28.7547 |       24.9185 | 0.000259294 |
-|    2 | noise-0.5sigma |        2 |         50 |   29.274 |       24.4173 | 0.000259294 |
-|    3 | noise-0.5sigma |        3 |        100 |  23.6217 |       23.4006 |         0.1 |
-|    4 | noise-0.5sigma |        3 |         25 |   29.141 |       25.6851 | 3.56225e-05 |
-|    5 | noise-0.5sigma |        3 |         50 |  27.0627 |       24.0133 | 5.29832e-05 |
-|    6 | noise-0.5sigma |        4 |        100 |  24.8545 |       24.0693 |  0.00621017 |
-|    7 | noise-0.5sigma |        4 |         25 |  25.3489 |         23.76 | 2.39503e-05 |
-|    8 | noise-0.5sigma |        4 |         50 |  24.1676 |        23.769 |  0.00923671 |
-|    9 | noise-0.5sigma |        5 |        100 |  27.8978 |       24.9391 |  0.00011721 |
-|   10 | noise-0.5sigma |        5 |         25 |  27.1655 |       25.4327 | 7.27895e-06 |
-|   11 | noise-0.5sigma |        5 |         50 |  23.7184 |       23.5349 |   0.0452035 |
-|   12 | noise-0.5sigma |        6 |        100 |   27.263 |       24.7176 |       1e-06 |
-|   13 | noise-0.5sigma |        6 |         25 |  26.8245 |        24.384 | 2.39503e-05 |
-|   14 | noise-0.5sigma |        6 |         50 |  23.7208 |        23.509 |   0.0672336 |
-|   15 | noise-0.5sigma |        7 |        100 |  24.6896 |        23.865 |  0.00280722 |
-|   16 | noise-0.5sigma |        7 |         25 |  27.6918 |       26.3387 | 3.56225e-05 |
-|   17 | noise-0.5sigma |        7 |         50 |  26.3278 |       24.6511 | 0.000259294 |
-|   18 | noise-0.5sigma |        8 |        100 |  23.6707 |       23.5122 |         0.1 |
-|   19 | noise-0.5sigma |        8 |         25 |  25.8088 |       24.3035 | 1.48735e-06 |
-|   20 | noise-0.5sigma |        8 |         50 |  23.6657 |       23.5672 |   0.0137382 |
-|   21 | noise-1sigma   |        2 |        100 |  31.6434 |       31.1158 |   0.0137382 |
-|   22 | noise-1sigma   |        2 |         25 |  34.7381 |       31.3533 | 0.000174333 |
-|   23 | noise-1sigma   |        2 |         50 |  32.8571 |       31.1651 |  0.00280722 |
-|   24 | noise-1sigma   |        3 |        100 |  34.5309 |       31.6927 | 1.48735e-06 |
-|   25 | noise-1sigma   |        3 |         25 |  35.6238 |       33.6718 | 0.000385662 |
-|   26 | noise-1sigma   |        3 |         50 |  33.7594 |       31.9793 | 2.39503e-05 |
-|   27 | noise-1sigma   |        4 |        100 |  33.0722 |       31.4156 |  0.00188739 |
-|   28 | noise-1sigma   |        4 |         25 |  33.5855 |       31.2513 | 3.29034e-06 |
-|   29 | noise-1sigma   |        4 |         50 |    31.04 |       30.8593 |         0.1 |
-|   30 | noise-1sigma   |        5 |        100 |  33.5398 |       31.5256 | 3.56225e-05 |
-|   31 | noise-1sigma   |        5 |         25 |  33.0377 |       31.9842 |  0.00280722 |
-|   32 | noise-1sigma   |        5 |         50 |   32.747 |       31.4035 | 1.08264e-05 |
-|   33 | noise-1sigma   |        6 |        100 |  31.1527 |       30.8965 |         0.1 |
-|   34 | noise-1sigma   |        6 |         25 |  32.5912 |       31.7305 |  0.00126896 |
-|   35 | noise-1sigma   |        6 |         50 |  32.3214 |       31.3423 |  0.00188739 |
-|   36 | noise-1sigma   |        7 |        100 |  34.0679 |       32.2407 | 1.08264e-05 |
-|   37 | noise-1sigma   |        7 |         25 |  30.9552 |       30.8373 |         0.1 |
-|   38 | noise-1sigma   |        7 |         50 |  30.9456 |       30.8357 |    0.030392 |
-|   39 | noise-1sigma   |        8 |        100 |  33.2887 |       31.9374 | 7.88046e-05 |
-|   40 | noise-1sigma   |        8 |         25 |  32.1405 |       31.5246 |  0.00126896 |
-|   41 | noise-1sigma   |        8 |         50 |  31.0152 |        30.878 |   0.0672336 |
-|   42 | noise-2sigma   |        2 |        100 |   51.371 |       49.8441 | 2.21222e-06 |
-|   43 | noise-2sigma   |        2 |         25 |  52.2632 |       50.0285 |  0.00126896 |
-|   44 | noise-2sigma   |        2 |         50 |  49.6787 |        49.564 |   0.0452035 |
-|   45 | noise-2sigma   |        3 |        100 |  51.5901 |       50.1737 |  4.8939e-06 |
-|   46 | noise-2sigma   |        3 |         25 |  51.3415 |       50.2732 | 1.61026e-05 |
-|   47 | noise-2sigma   |        3 |         50 |  50.5423 |       50.1583 |  0.00417532 |
-|   48 | noise-2sigma   |        4 |        100 |  49.6666 |       49.5483 |         0.1 |
-|   49 | noise-2sigma   |        4 |         25 |  51.6795 |       50.2816 |  0.00188739 |
-|   50 | noise-2sigma   |        4 |         50 |  49.6868 |       49.6307 |   0.0204336 |
-|   51 | noise-2sigma   |        5 |        100 |  49.6541 |       49.5236 |   0.0672336 |
-|   52 | noise-2sigma   |        5 |         25 |  51.4279 |       50.2023 | 0.000259294 |
-|   53 | noise-2sigma   |        5 |         50 |  49.6855 |       49.5601 |         0.1 |
-|   54 | noise-2sigma   |        6 |        100 |  49.6391 |       49.5414 |         0.1 |
-|   55 | noise-2sigma   |        6 |         25 |  49.6603 |       49.5188 |         0.1 |
-|   56 | noise-2sigma   |        6 |         50 |  49.6062 |       49.5491 |    0.030392 |
-|   57 | noise-2sigma   |        7 |        100 |  49.6592 |       49.6108 |   0.0204336 |
-|   58 | noise-2sigma   |        7 |         25 |  49.6097 |       49.5407 |    0.030392 |
-|   59 | noise-2sigma   |        7 |         50 |  49.6163 |       49.5114 |   0.0452035 |
-|   60 | noise-2sigma   |        8 |        100 |  51.3145 |       49.9485 | 7.88046e-05 |
-|   61 | noise-2sigma   |        8 |         25 |  49.6595 |       49.5381 |         0.1 |
-|   62 | noise-2sigma   |        8 |         50 |  49.6278 |       49.5279 |         0.1 |
-
+|    0 | noise-0.5sigma |        2 |         25 |  23.3782 |       23.2505 | 0.000259294 |
+|    1 | noise-0.5sigma |        2 |         50 |  21.8022 |       20.8957 | 0.000259294 |
+|    2 | noise-0.5sigma |        2 |        100 |  26.4893 |       24.8314 | 1.61026e-05 |
+|    3 | noise-0.5sigma |        3 |         25 |  24.4425 |       24.1905 | 3.56225e-05 |
+|    4 | noise-0.5sigma |        3 |         50 |  24.4663 |            24 | 5.29832e-05 |
+|    5 | noise-0.5sigma |        3 |        100 |  17.8284 |       14.9309 |         0.1 |
+|    6 | noise-0.5sigma |        4 |         25 |  23.8701 |       23.8362 | 2.39503e-05 |
+|    7 | noise-0.5sigma |        4 |         50 |  16.9993 |       15.2766 |  0.00923671 |
+|    8 | noise-0.5sigma |        4 |        100 |   26.538 |       25.0681 |  0.00621017 |
+|    9 | noise-0.5sigma |        5 |         25 |  25.3555 |       24.6693 | 7.27895e-06 |
+|   10 | noise-0.5sigma |        5 |         50 |  16.5668 |       16.4842 |   0.0452035 |
+|   11 | noise-0.5sigma |        5 |        100 |  24.4073 |       24.1205 |  0.00011721 |
+|   12 | noise-0.5sigma |        6 |         25 |  24.0951 |       23.9904 | 2.39503e-05 |
+|   13 | noise-0.5sigma |        6 |         50 |  12.7082 |       12.6402 |   0.0672336 |
+|   14 | noise-0.5sigma |        6 |        100 |  24.1184 |       23.9754 |       1e-06 |
+|   15 | noise-0.5sigma |        7 |         25 |  23.8388 |       23.8353 | 3.56225e-05 |
+|   16 | noise-0.5sigma |        7 |         50 |  16.9012 |       16.1963 | 0.000259294 |
+|   17 | noise-0.5sigma |        7 |        100 |  25.7091 |       24.3466 |  0.00280722 |
+|   18 | noise-0.5sigma |        8 |         25 |  25.4185 |       24.2305 | 1.48735e-06 |
+|   19 | noise-0.5sigma |        8 |         50 |  17.1544 |       17.1466 |   0.0137382 |
+|   20 | noise-0.5sigma |        8 |        100 |  13.0915 |       12.9384 |         0.1 |
+|   21 | noise-1sigma   |        2 |         25 |  33.3813 |       31.3964 | 0.000174333 |
+|   22 | noise-1sigma   |        2 |         50 |  27.9583 |       25.6886 |  0.00280722 |
+|   23 | noise-1sigma   |        2 |        100 |   26.031 |       25.9017 |   0.0137382 |
+|   24 | noise-1sigma   |        3 |         25 |  29.7305 |       29.5679 | 0.000385662 |
+|   25 | noise-1sigma   |        3 |         50 |  30.8486 |       30.8301 | 2.39503e-05 |
+|   26 | noise-1sigma   |        3 |        100 |    30.81 |       30.7858 | 1.48735e-06 |
+|   27 | noise-1sigma   |        4 |         25 |  31.0964 |        31.094 | 3.29034e-06 |
+|   28 | noise-1sigma   |        4 |         50 |   23.371 |       23.3494 |         0.1 |
+|   29 | noise-1sigma   |        4 |        100 |  26.5657 |       25.5499 |  0.00188739 |
+|   30 | noise-1sigma   |        5 |         25 |  32.2665 |       31.7617 |  0.00280722 |
+|   31 | noise-1sigma   |        5 |         50 |  31.8778 |       31.3293 | 1.08264e-05 |
+|   32 | noise-1sigma   |        5 |        100 |  31.1727 |        31.153 | 3.56225e-05 |
+|   33 | noise-1sigma   |        6 |         25 |  25.9683 |       25.5905 |  0.00126896 |
+|   34 | noise-1sigma   |        6 |         50 |  26.9496 |       25.8542 |  0.00188739 |
+|   35 | noise-1sigma   |        6 |        100 |  26.6801 |       26.4703 |         0.1 |
+|   36 | noise-1sigma   |        7 |         25 |  23.5906 |       23.4312 |         0.1 |
+|   37 | noise-1sigma   |        7 |         50 |  30.9757 |        30.973 |    0.030392 |
+|   38 | noise-1sigma   |        7 |        100 |  23.4616 |       23.4177 | 1.08264e-05 |
+|   39 | noise-1sigma   |        8 |         25 |  26.0009 |       25.9177 |  0.00126896 |
+|   40 | noise-1sigma   |        8 |         50 |   30.262 |       30.2165 |   0.0672336 |
+|   41 | noise-1sigma   |        8 |        100 |  31.0681 |       31.0671 | 7.88046e-05 |
+|   42 | noise-2sigma   |        2 |         25 |  48.3115 |        47.804 |  0.00126896 |
+|   43 | noise-2sigma   |        2 |         50 |  48.0483 |       46.7206 |   0.0452035 |
+|   44 | noise-2sigma   |        2 |        100 |  51.2101 |       49.8417 | 2.21222e-06 |
+|   45 | noise-2sigma   |        3 |         25 |  50.4188 |       50.0577 | 1.61026e-05 |
+|   46 | noise-2sigma   |        3 |         50 |  47.0717 |       45.7904 |  0.00417532 |
+|   47 | noise-2sigma   |        3 |        100 |  49.8791 |       49.7953 |  4.8939e-06 |
+|   48 | noise-2sigma   |        4 |         25 |  50.3468 |       50.0683 |  0.00188739 |
+|   49 | noise-2sigma   |        4 |         50 |  49.7143 |       49.7104 |   0.0204336 |
+|   50 | noise-2sigma   |        4 |        100 |   51.955 |       50.3372 |         0.1 |
+|   51 | noise-2sigma   |        5 |         25 |  49.8459 |       49.7974 | 0.000259294 |
+|   52 | noise-2sigma   |        5 |         50 |  49.8696 |       49.7575 |         0.1 |
+|   53 | noise-2sigma   |        5 |        100 |  51.0832 |       49.8741 |   0.0672336 |
+|   54 | noise-2sigma   |        6 |         25 |  49.5725 |       49.5682 |         0.1 |
+|   55 | noise-2sigma   |        6 |         50 |  47.1561 |       47.0253 |    0.030392 |
+|   56 | noise-2sigma   |        6 |        100 |  49.7303 |       49.7278 |         0.1 |
+|   57 | noise-2sigma   |        7 |         25 |  47.0183 |       46.9967 |    0.030392 |
+|   58 | noise-2sigma   |        7 |         50 |   47.179 |       47.0493 |   0.0452035 |
+|   59 | noise-2sigma   |        7 |        100 |  51.4086 |       50.1199 |   0.0204336 |
+|   60 | noise-2sigma   |        8 |         25 |  47.2009 |       46.9837 |         0.1 |
+|   61 | noise-2sigma   |        8 |         50 |  46.8958 |       46.8475 |         0.1 |
+|   62 | noise-2sigma   |        8 |        100 |  47.1671 |       46.9541 | 7.88046e-05 |
 
 
 ### Some discussions
 
-1. Answering (a): Yes, `ensemble_rmse` are almost always less than `avg_rmse`, indicating that ensemble method does reduce prediction error.
-2. Answering (b): For `1sigma`, `n_ensemble`=100 not always better than `n_ensemble`=25, for example, comparing row index=30 versus row index=31.
+1. Answering (a): Yes, `ensemble_rmse` are almost always less than `avg_rmse`, indicating that ensemble method does reduce prediction error. Hence it's more meaningful to talk about the `ensemble_rmse`.
+2. Answering (b): For `0.5sigma`, `n_ensemble`=100 is not better than `n_ensemble`=25, as indicating by the row index=0(25 ensemble_rmse=23.2505) versus row index=2(100 ensemble_rmse=24.8314)
 3. Answering (c): (a), (b) still hold within different noise levels.
-4. Notice that for a fixed noise level, n_hidden does not significantly affect the RMSE.
-5. There seems no clear pattern in the `best_lr` with respect to the number of hidden neurons..
+4. There seems no clear pattern in the `best_lr` with respect to the number of hidden neurons.
+5. `ensemble_rmse` increases as noise level increases, which is fairly reasonable.
+
 
 [Problem 2 train/pred code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_2/problem2_pred.py)
 
