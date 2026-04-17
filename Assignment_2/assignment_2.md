@@ -125,3 +125,21 @@ note:
 
 
 ## 3. Visualize the regression results of Exercise 8.1 at least for the case with the Gaussian noise at 0.5 times the standard deviation of $y_{\text{signal}}$
+
+Since there are many combinations with respect to `n_hiddens` and `n_ensembles`, I've chosen the ones with highest/lowest `ensemble_rmse`, and plotted its ensemble mean results versus the test data and the true relation as below:
+
+min `ensemble_rmse`: `n_hiddens`=6, `n_ensembles`=50
+max `ensemble_rmse`: `n_hiddens`=4, `n_ensembles`=100
+
+![Problem3-1](imgs/problem3-1.jpg)
+
+It's easy to see for the case of max `ensemble_rmse`, the result looks like a straight line, indicating this model did not learn any non linear feature of the data, maybe it needed more training epochs!
+
+To investigate further, I've plotted all members for those two cases as below:
+
+![Problem3-2](imgs/problem3-2.jpg)
+
+None of the member in the case of max `ensemble_rmse` capture non linearity!
+
+
+[Problem 3 code](https://github.com/weyltensor007/ncu-env-data-science/blob/main/Assignment_2/problem3.py)
