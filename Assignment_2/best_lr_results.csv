@@ -1,0 +1,16 @@
+sigma,n_hidden,n_ensemble,best_lr
+noise-2sigma,4,25,2.395026619987486e-05
+noise-2sigma,4,50,7.880462815669905e-05
+noise-2sigma,4,100,1e-06
+noise-2sigma,5,25,3.5622478902624444e-05
+noise-2sigma,5,50,2.395026619987486e-05
+noise-2sigma,5,100,2.2122162910704504e-06
+noise-2sigma,6,25,0.0002592943797404667
+noise-2sigma,6,50,0.1
+noise-2sigma,6,100,5.2983169062837125e-05
+noise-2sigma,7,25,0.03039195382313201
+noise-2sigma,7,50,0.1
+noise-2sigma,7,100,1e-06
+noise-2sigma,8,25,0.1
+noise-2sigma,8,50,0.0452035365636025
+noise-2sigma,8,100,0.1
