@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
 from sklearn.decomposition import PCA
+from matplotlib import pyplot as plt
+
+cmap = plt.get_cmap('tab10')
 
 # read in and preprocess data
-
 df = pd.read_csv(r"data\San_Francisco_Bay.csv")  # chl, dox, spm, sal, temp
 X = df.values
 n = X.shape[0] # number of data
@@ -13,7 +15,7 @@ X = (X- X.mean(axis=0))/X.std(axis=0) # center and standardize the data
 pca = PCA()
 pca.fit(X)
 total_variance = pca.explained_variance_.sum()
-print("sklearn:", pca.explained_variance_ratio_)
+
 def calculate_explained_variance_ratio(A):
     '''
     A means the projected component in some basis,
@@ -62,28 +64,70 @@ def get_rotation_matrix_of_RPCA(target_matrix, tol=1e-6, max_iter=100):
         s = s_new
     return rotation_matrix
 
+fig1, axes1 = plt.subplots(3, 4, figsize=(10, 10), constrained_layout=True) # for plotting eigenvector components
+fig2, axes2 = plt.subplots(4, 1, figsize=(10, 10), constrained_layout=True) # for plotting eigenvector components
 
+x = np.arange(1,6)
+for ax1, ax2 in zip(axes1.flat,axes2.flat):
+    ax1.set_xticks(x)
+    ax1.set_xlim(x[0], x[-1])
+    ax1.set_ylim(-1,1)
+
+    ax2.set_xticks(x)
+    ax2.set_xlim(x[0], x[-1])
+    ax2.set_ylim(0, total_variance)
 # start doing PCA/RPCA for different numbers of components k
-results = []
-for k in range(1,X.shape[1]+1):
-    # do PCA, getting the A, E matrices and explained variances
+# in the mean while, plot components of eigenvectors and explained variance ratio
+
+for k in range(2,X.shape[1]+1):
+    # ordinary PCA, getting the A, E matrices and explained variances
     pca = PCA(n_components=k)
     pca.fit(X)
     E = pca.components_.T # each row in pca.components_ represent each eigenvector^T, so we need to do transpose to get E
     A = X.dot(E) # equation (9.66) in the textbook
     explained_variance_PCA = calculate_explained_variance_ratio(A)
-    
+    ## plot components of each column vector in E
+    for i in range(E.shape[1]):
+        if k != X.shape[1]:
+            axes1[0, k-2].plot(x, E[:,i], color=cmap(i))
+        else:
+            axes1[0, k-2].plot(x, E[:,i], color=cmap(i),label=f"e_{i+1}")
+        axes1[0,k-2].set_title(f"k={k},PCA")
     # A-frame rotation
     rotation_matrix_A_frame = get_rotation_matrix_of_RPCA(target_matrix=E)
     A_A_frame = A.dot(rotation_matrix_A_frame)
+    E_A_frame = E.dot(rotation_matrix_A_frame)
     explained_variance_A_frame = calculate_explained_variance_ratio(A_A_frame)
+    ## plot components of each column vector in E_A_frame
+    for i in range(E_A_frame.shape[1]):
+        if k != X.shape[1]:
+            axes1[1, k-2].plot(x, E_A_frame[:,i], color=cmap(i))
+        else:
+            axes1[1, k-2].plot(x, E_A_frame[:,i], color=cmap(i),label=f"e_{i+1}")
+        axes1[1,k-2].set_title(f"k={k},A-frame")
     # E-frame rotation
     rotation_matrix_E_frame = get_rotation_matrix_of_RPCA(target_matrix=A)
     A_E_frame = A.dot(rotation_matrix_E_frame)
+    E_E_frame = E.dot(rotation_matrix_E_frame)
     explained_variance_E_frame = calculate_explained_variance_ratio(A_E_frame)
+    ## plot components of each column vector in E_E_frame
+    for i in range(E_E_frame.shape[1]):
+        if k != X.shape[1]:
+            axes1[2, k-2].plot(x, E_E_frame[:,i], color=cmap(i))
+        else:
+            axes1[2, k-2].plot(x, E_E_frame[:,i], color=cmap(i),label=f"e_{i+1}")
+        axes1[2,k-2].set_title(f"k={k},E-frame")
 
-    # results.append([explained_variance_PCA, explained_variance_E_frame, explained_variance_A_frame])
-    print(f"k={k}\n PCA={explained_variance_PCA}\n E={explained_variance_E_frame}\n A={explained_variance_A_frame}")
+    print(f"k={k}")
+    print(f"PCA_variance={explained_variance_PCA}")
+    print(f"E-frame_variance={explained_variance_E_frame}")
+    print(f"A-frame_variance={explained_variance_A_frame}")
 
 
+handles, labels = axes1[0,3].get_legend_handles_labels()
 
+# single shared legend
+fig1.legend(handles, labels,
+            loc='upper right')
+
+plt.show()
