@@ -7,4 +7,5 @@ pandoc assignment_3.md -o assignment_3.pdf ^
 -V colorlinks=true ^
 -V linkcolor=blue ^
 -V urlcolor=cyan ^
--V citecolor=magenta ^ && start assignment_3.pdf
+-V citecolor=magenta ^
+-V header-includes="\usepackage{float}" && start assignment_3.pdf
