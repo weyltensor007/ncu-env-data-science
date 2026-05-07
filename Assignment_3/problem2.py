@@ -64,18 +64,23 @@ def get_rotation_matrix_of_RPCA(target_matrix, tol=1e-6, max_iter=100):
         s = s_new
     return rotation_matrix
 
+# set up figures for plotting
+# axes1: plot components of column vectors in E
+# axes2: plot explained variance ratio
 fig1, axes1 = plt.subplots(3, 4, figsize=(10, 10), constrained_layout=True) # for plotting eigenvector components
 fig2, axes2 = plt.subplots(4, 1, figsize=(10, 10), constrained_layout=True) # for plotting eigenvector components
 
 x = np.arange(1,6)
-for ax1, ax2 in zip(axes1.flat,axes2.flat):
+for ax1 in axes1.flat:
     ax1.set_xticks(x)
     ax1.set_xlim(x[0], x[-1])
     ax1.set_ylim(-1,1)
 
+for ax2 in axes2.flat:
     ax2.set_xticks(x)
     ax2.set_xlim(x[0], x[-1])
-    ax2.set_ylim(0, total_variance)
+    ax2.set_ylim(0, 0.6)
+
 # start doing PCA/RPCA for different numbers of components k
 # in the mean while, plot components of eigenvectors and explained variance ratio
 
@@ -118,16 +123,24 @@ for k in range(2,X.shape[1]+1):
             axes1[2, k-2].plot(x, E_E_frame[:,i], color=cmap(i),label=f"e_{i+1}")
         axes1[2,k-2].set_title(f"k={k},E-frame")
 
+    # plot explained variances for 3 types of PCA
+    axes2[k-2].plot(x[:k], explained_variance_PCA, color=cmap(0), label="PCA")
+    axes2[k-2].plot(x[:k], explained_variance_E_frame,color=cmap(1), label="E-frame")
+    axes2[k-2].plot(x[:k], explained_variance_A_frame,color=cmap(2), label="A-frame")
+    if k==2: # only for the first ax in axes2
+        axes2[k-2].legend()
+        axes2[k-2].set_title("Explained variance ratio for different k")
+    # print explained variances
     print(f"k={k}")
     print(f"PCA_variance={explained_variance_PCA}")
     print(f"E-frame_variance={explained_variance_E_frame}")
     print(f"A-frame_variance={explained_variance_A_frame}")
 
 
-handles, labels = axes1[0,3].get_legend_handles_labels()
 
-# single shared legend
-fig1.legend(handles, labels,
+# single shared legend for fig1
+handles1, labels1 = axes1[0,3].get_legend_handles_labels()
+fig1.legend(handles1, labels1,
             loc='upper right')
 
 plt.show()
