@@ -42,23 +42,29 @@ def get_dL_dR(rotation_matrix, target_matrix):
     second_term = M_tilde.dot(diagonal_term)/M_tilde.shape[0]
     return (M.T).dot(first_term-second_term)
 
+def objective_function(M):
+    first_term = np.sum(M**4)
+    second_term = np.sum(np.sum(M**2, axis=0)**2)
+    return first_term - second_term/M.shape[0]
 
 # RPCA algorithm
-def get_rotation_matrix_of_RPCA(target_matrix, tol=1e-6, max_iter=100):
+def get_rotation_matrix_of_RPCA(target_matrix, tol=1e-9, max_iter=100, lr = 2):
     # init rotation matrix as identity matrix
     rotation_matrix = np.eye(target_matrix.shape[1])
-    s = 0 # sum of singular values of dL_dR
+    s = objective_function(target_matrix.dot(rotation_matrix)) # initial objective function value
     
     # start looping
     for _ in range(max_iter):
         # calculate dL_dR matrix
         dL_dR = get_dL_dR(rotation_matrix, target_matrix)
-        # get svd of dL_dR in order to update rotation matrix
-        U, sigma, VT = np.linalg.svd(dL_dR)
+        rotation_matrix_not_no = rotation_matrix+lr*dL_dR # 'n'ot 'o'rthonormal
+        # note that for small learning rate, like lr=1e-3, the result differs!
+        # get svd of rotation_matrix_not_no in order to update rotation matrix
+        U, sigma, VT = np.linalg.svd(rotation_matrix_not_no)
         # update rotation matrix
         rotation_matrix = U.dot(VT)
-        # calculate sum(singular values) and check for break
-        s_new = sigma.sum()
+        # calculate objective function and check for break
+        s_new = objective_function(target_matrix.dot(rotation_matrix))
         if s!=0 and s_new<s*(1+tol): # if no improvement then break
             break
         s = s_new
