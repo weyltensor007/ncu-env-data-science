@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
@@ -22,9 +23,52 @@ def miss_class_rate(n_cols):
     # predict
     y_train_pred = lda.predict(X_train_scaled)
     y_test_pred = lda.predict(X_test_scaled)
-    if n_cols == 2:
-        np.save("preds/y_train_pred_12.1.npy", y_train_pred)
-        np.save("preds/y_test_pred_12.1.npy", y_test_pred)
+    if n_cols == 2: # plot decision boundaries
+        x_min, x_max = X_train_scaled[:, 0].min() - 1, X_train_scaled[:, 0].max() + 1
+        y_min, y_max = X_train_scaled[:, 1].min() - 1, X_train_scaled[:, 1].max() + 1
+        
+        xx, yy = np.meshgrid(
+            np.linspace(x_min, x_max, 200),
+            np.linspace(y_min, y_max, 200)
+        )
+        
+        Z = lda.predict(np.c_[xx.ravel(), yy.ravel()])
+        Z = Z.reshape(xx.shape)
+
+        plt.contourf(xx, yy, Z, alpha=0.3)
+
+        # -------------------------
+        # correct / wrong mask
+        # -------------------------
+        correct = (y_train.values == y_train_pred)
+
+        # -------------------------
+        # 1. correct points
+        # -------------------------
+        plt.scatter(
+            X_train_scaled[correct, 0],
+            X_train_scaled[correct, 1],
+            c=y_train.values[correct],
+            edgecolor="k",
+        )
+
+        # -------------------------
+        # 2. misclassified points（preserve class color, highlight wrong class）
+        # -------------------------
+        plt.scatter(
+            X_train_scaled[~correct, 0],
+            X_train_scaled[~correct, 1],
+            c=y_train.values[~correct],   # preserve class
+            edgecolor="red",              # highlight using edgecolor
+            linewidth=2,
+            marker="X",
+            s=120,
+        )
+
+        plt.xlabel("Feature 1 (scaled)", size =14)
+        plt.ylabel("Feature 2 (scaled)", size=14)
+        plt.title("LDA Decision Boundary + Misclassification",size=18)
+        plt.show()
     misclassification_rate_train = (y_train != y_train_pred).mean()
     misclassification_rate_test = (y_test != y_test_pred).mean()
     return np.array([misclassification_rate_train, misclassification_rate_test]).round(4)
